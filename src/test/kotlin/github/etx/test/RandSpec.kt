@@ -6,6 +6,7 @@ import java.time.OffsetDateTime
 import java.time.OffsetTime
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 class RandSpec {
@@ -29,32 +30,29 @@ class RandSpec {
 
     @Test
     fun randOffsetDateTime() {
-        val a = subject.nDate.withHour(0).withMinute(0).withSecond(0).withNano(0)
-        val b = subject.pDate.withHour(0).withMinute(0).withSecond(0).withNano(0)
-        val now = OffsetDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)
+        val a = subject.nDate
+        val b = subject.pDate
+        val now = OffsetDateTime.now()
+
+        assertNotEquals(now, a)
+        assertNotEquals(now, b)
 
         assertTrue {
-            now.minusDays(7) <= a && a <= now
+            now.minusDays(10) < a && a < now
         }
 
         assertTrue {
-            now.plusDays(1) <= b && b <= now.plusDays(7)
+            now < b && b < now.plusDays(10)
         }
     }
 
     @Test
     fun randOffsetTime() {
-        val a = subject.nTime.withSecond(0).withNano(0)
-        val b = subject.pTime.withSecond(0).withNano(0)
-        val now = OffsetTime.now().withSecond(0).withNano(0)
+        val result = subject.time
+        val now = OffsetTime.now()
 
-        assertTrue {
-            now.minusHours(7) <= a && a <= now
-        }
+        assertNotEquals(now, result)
 
-        assertTrue {
-            now.plusHours(1) <= b && b <= now.plusHours(7)
-        }
     }
 
     @Test
@@ -63,12 +61,15 @@ class RandSpec {
         val b = subject.pInstant
         val now = Instant.now()
 
+        assertNotEquals(now, a)
+        assertNotEquals(now, b)
+
         assertTrue {
-            now.minusSeconds(7 * 24 * 60 * 60) <= a && a <= now
+            now.minusSeconds(8 * 24 * 60 * 60) <= a && a <= now
         }
 
         assertTrue {
-            now.plusSeconds(1 * 24 * 60 * 60) <= b && b <= now.plusSeconds(7 * 24 * 60 * 60)
+            now <= b && b <= now.plusSeconds(8 * 24 * 60 * 60)
         }
     }
 }

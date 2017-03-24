@@ -43,3 +43,68 @@ dependencies {
     testCompile("org.junit.jupiter:junit-jupiter-api:5.0.0-M3")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-M3")
 }
+
+
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar, javadocJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name "${project.group}:${project.archivesBaseName}"
+                packaging 'jar'
+                description "A very simple lib of Java Random and Kotlin aims to make testing easier, no magic."
+                url "https://github.com/erictsangx/kotlin-random"
+
+                scm {
+                    connection 'scm:git:git://github.com/erictsangx/kotlin-random.git'
+                    developerConnection 'scm:git:ssh://github.com/erictsangx/kotlin-random.git'
+                    url 'https://github.com/erictsangx/kotlin-random'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'erictsangx'
+                        name 'Eric Tsang'
+                        email 'erictsangx@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+}

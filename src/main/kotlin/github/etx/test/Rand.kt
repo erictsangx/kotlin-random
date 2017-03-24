@@ -1,5 +1,6 @@
 package github.etx.test
 
+import java.time.Duration
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.OffsetTime
@@ -64,51 +65,48 @@ object Rand {
 
 
     /**
-     * [OffsetDateTime.now] minus [0,7] days
+     * random OffsetTime
+     */
+    val time: OffsetTime
+        get() {
+            return OffsetTime.now() + timeDuration()
+        }
+
+    /**
+     * [OffsetDateTime.now] - [1,7] days - [time]
      */
     val nDate: OffsetDateTime
         get() {
-            return OffsetDateTime.now().minusDays(int(0, 7).toLong())
+            return OffsetDateTime.now() - datetimeDuration()
         }
 
     /**
-     * [OffsetDateTime.now] plus [1,7] days
+     * [OffsetDateTime.now] + [1,7] days + [time]
      */
     val pDate: OffsetDateTime
         get() {
-            return OffsetDateTime.now().plusDays(int(1, 7).toLong())
+            return OffsetDateTime.now() + datetimeDuration()
         }
 
     /**
-     * [OffsetTime.now] minus [0,7] hours
-     */
-    val nTime: OffsetTime
-        get() {
-            return OffsetTime.now().minusHours(int(0, 7).toLong())
-        }
-
-    /**
-     * [OffsetTime.now] plus [1,7] hours
-     */
-    val pTime: OffsetTime
-        get() {
-            return OffsetTime.now().plusHours(int(1, 7).toLong())
-        }
-
-    /**
-     * [Instant.now] minus [0,7] hours
+     * [Instant.now] - [1,7] days - [time]
      */
     val nInstant: Instant
         get() {
-            return Instant.now().minusSeconds((int(0, 7).toLong() * 24 * 60 * 60))
+            return Instant.now() - datetimeDuration()
         }
 
     /**
-     * [Instant.now] plus [1,7] hours
+     * [Instant.now] + [1,7] days + [time]
      */
     val pInstant: Instant
         get() {
-            return Instant.now().plusSeconds(int(1, 7).toLong() * 24 * 60 * 60)
+            return Instant.now() + datetimeDuration()
         }
 
+    private fun timeDuration(): Duration = Duration.ofHours(int(1, 23).toLong()) +
+        Duration.ofMinutes(int(1, 59).toLong()) +
+        Duration.ofSeconds(int(1, 59).toLong())
+
+    private fun datetimeDuration(): Duration = Duration.ofDays(int(1, 7).toLong()) + timeDuration()
 }
